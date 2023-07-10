@@ -1,0 +1,115 @@
+define function !!translate()
+    !latinU = 'A,B,V,G,D,E,JO,ZH,Z,I,JJ,K,L,M,N,O,P,R,S,T,U,F,KH,C,CH,SH,SHH,Y,EH,JU,JA, '
+    !latinL = 'a,b,v,g,d,e,jo,zh,z,i,jj,k,l,m,n,o,p,r,s,t,u,f,kh,c,ch,sh,shh,y,eh,ju,ja, '
+    !latinUarr = !latinU.split(',')
+    !latinLarr = !latinL.split(',')
+    
+    !kirilU = 'А,Б,В,Г,Д,Е,Ё,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ы,Э,Ю,Я, '
+    !kirilL = 'а,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ы,э,ю,я, '
+    !kirilUarr = !kirilU.split(',')
+    !kirilLarr = !kirilL.split(',')
+    
+    !symbols = array()
+    !somestring = 'ABVGDEjoZHZiJJKLMN OpRs TUFKHCchSHsshYEH juJA'
+    
+    -- Самый ужасный разделитель по буквам, который я когда либо делал
+    do !i from 1 to !somestring.length()
+        !symbol = !somestring.substring(!i, 1)
+        if (!symbol eq 'J' and !somestring.substring(!i, 2) neq 'JK' or !symbol eq 'j' and !somestring.substring(!i, 2) neq 'jk') then
+            !symbol = !somestring.substring(!i, 2)
+            !symbols[!i] = !symbol
+        elseif (!symbol eq 'Z' or !symbol eq 'z') then
+            if (!somestring.substring(!i, 2) eq 'ZH' or !somestring.substring(!i, 2) eq 'zh') then
+                !symbol = !somestring.substring(!i, 2)
+                !symbols[!i] = !symbol
+            else 
+                !symbol = !somestring.substring(!i, 1)
+                !symbols[!i] = !symbol
+            endif
+        elseif (!symbol eq 'K' or !symbol eq 'k') then
+            if (!somestring.substring(!i, 2) eq 'KH' or !somestring.substring(!i, 2) eq 'kh') then
+                !symbol = !somestring.substring(!i, 2)
+                !symbols[!i] = !symbol
+            else 
+                !symbol = !somestring.substring(!i, 1)
+                !symbols[!i] = !symbol
+            endif
+        elseif (!symbol eq 'C' or !symbol eq 'c') then
+            if (!somestring.substring(!i, 2) eq 'CH' or !somestring.substring(!i, 2) eq 'ch') then
+                !symbol = !somestring.substring(!i, 2)
+                !symbols[!i] = !symbol
+            else 
+                !symbol = !somestring.substring(!i, 1)
+                !symbols[!i] = !symbol
+            endif
+        elseif (!symbol eq 'E' or !symbol eq 'e') then
+            if (!somestring.substring(!i, 2) eq 'EH' or !somestring.substring(!i, 2) eq 'eh') then
+                !symbol = !somestring.substring(!i, 2)
+                !symbols[!i] = !symbol
+            else 
+                !symbol = !somestring.substring(!i, 1)
+                !symbols[!i] = !symbol
+            endif
+        elseif (!symbol eq 'S' or !symbol eq 's') then
+            if (!somestring.substring(!i, 3) eq 'SHH' or !somestring.substring(!i, 2) eq 'shh') then
+                !symbol = !somestring.substring(!i, 3)
+                !symbols[!i] = !symbol
+            elseif (!somestring.substring(!i, 2) eq 'SH' or !somestring.substring(!i, 2) eq 'sh') then
+                !symbol = !somestring.substring(!i, 2)
+                !symbols[!i] = !symbol
+            else 
+                !symbol = !somestring.substring(!i, 1)
+                !symbols[!i] = !symbol
+            endif
+        elseif (!symbol eq 'H' or !symbol eq 'h') then
+            skip
+        elseif (!symbol eq 'U' or !symbol eq 'u') then
+            if (!somestring.substring(!i, -2) eq 'JU' or !somestring.substring(!i, -2) eq 'ju') then
+                skip
+            else
+                !symbols[!i] = !somestring.substring(!i, 1)
+            endif
+        elseif (!symbol eq 'A' or !symbol eq 'a') then
+            if (!somestring.substring(!i, -2) eq 'JA' or !somestring.substring(!i, -2) eq 'ja') then
+                skip
+            else
+                !symbols[!i] = !somestring.substring(!i, 1)
+            endif
+        elseif (!symbol eq 'K' or !symbol eq 'k') then
+            if (!somestring.substring(!i, -2) eq 'JK' or !somestring.substring(!i, -2) eq 'jk') then
+                skip
+            else
+                !symbols[!i] = !somestring.substring(!i, 1)
+            endif
+        elseif (!symbol eq 'O' or !symbol eq 'o') then
+            if (!somestring.substring(!i, -2) eq 'JO' or !somestring.substring(!i, -2) eq 'jo') then
+                skip
+            else
+                !symbols[!i] = !somestring.substring(!i, 1)
+            endif
+        elseif (!symbol eq 'J' or !symbol eq 'j') then
+            if (!somestring.substring(!i, -2) eq 'JJ' or !somestring.substring(!i, -2) eq 'jj') then
+                skip
+            else
+                !symbols[!i] = !somestring.substring(!i, 1)
+            endif
+        else 
+            !symbols[!i] = !somestring.substring(!i, 1)
+        endif
+    enddo
+
+    q var !symbols
+    !translateddisc = ''
+
+    do !sym values !symbols
+        do !i from 1 to 32
+            if (!latinUarr[!i] eq !sym) then
+                !translateddisc = !translateddisc + !kirilUarr[!i]
+            elseif (!latinLarr[!i] eq !sym) then
+                !translateddisc = !translateddisc + !kirilLarr[!i]
+            endif
+        enddo
+    enddo
+
+    q var !translateddisc
+
